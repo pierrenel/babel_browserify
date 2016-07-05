@@ -24,6 +24,5 @@
     "vinyl-source-stream": "1.1.0"
   },
   "dependencies": {
-    "three": "^0.78.0"
   }
 }

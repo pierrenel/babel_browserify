@@ -13,21 +13,29 @@ var gulp = require('gulp'),
 /* Browsersync */
 gulp.task('serve', ['styles'], function() {
     browserSync.init({
-        server: "./"
+        server: "./public/"
     });
+    gulp.watch(['./*.html'],['templates']);
     gulp.watch(['./app/**/*.js'],['es6']);
     gulp.watch(['./app/scss/*.scss','!./scss/ie8.scss','!./scss/ie9.scss'], ['styles']).on('change', browserSync.reload);
+});
+
+/* HTML */
+gulp.task('templates', function() {
+  return gulp.src('./*.html')
+    .pipe(gulp.dest('./public/'))
+    .pipe(browserSync.stream());
 });
 
 /* ES6 */
 gulp.task('es6', function() {
 	browserify({ debug: true })
 		.transform(babelify)
-		.require("./app/app.js", { entry: true })
+		.require("./app/js/app.js", { entry: true })
 		.bundle()
 		.on('error',gutil.log)
-		.pipe(source('bundle.js'))
-    	.pipe(gulp.dest('./'));
+		.pipe(source('app.js'))
+    .pipe(gulp.dest('./public/js/'));
 });
 
 /* SCSS */
@@ -45,14 +53,15 @@ gulp.task('styles', function() {
     }))
     .pipe(concat('styles.css'))
     .pipe(minify())
-    .pipe(gulp.dest('./'))
+    .pipe(gulp.dest('./public/css/'))
     .pipe(browserSync.stream());
 });
 
 /* Watch */
 gulp.task('watch',function() {
+  gulp.watch(['./*.html'],['templates']);
 	gulp.watch(['./app/**/*.js'],['es6']);
 	gulp.watch(['./app/scss/*.scss','!./scss/ie8.scss','!./scss/ie9.scss'], ['styles']);
 });
 
-gulp.task('default', ['styles','es6','watch']);
+gulp.task('default', ['templates','styles','es6','watch']);

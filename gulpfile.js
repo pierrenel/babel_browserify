@@ -10,6 +10,7 @@ var gulp = require('gulp'),
   	prefix = require('gulp-autoprefixer'),
   	minify = require('gulp-minify-css');
 
+/* Browsersync */
 gulp.task('serve', ['styles'], function() {
     browserSync.init({
         server: "./"
@@ -18,6 +19,7 @@ gulp.task('serve', ['styles'], function() {
     gulp.watch(['./app/scss/*.scss','!./scss/ie8.scss','!./scss/ie9.scss'], ['styles']).on('change', browserSync.reload);
 });
 
+/* ES6 */
 gulp.task('es6', function() {
 	browserify({ debug: true })
 		.transform(babelify)
@@ -28,6 +30,7 @@ gulp.task('es6', function() {
     	.pipe(gulp.dest('./'));
 });
 
+/* SCSS */
 gulp.task('styles', function() {
   return gulp.src(['./app/scss/master.scss'])
     .pipe(sass({
@@ -46,6 +49,7 @@ gulp.task('styles', function() {
     .pipe(browserSync.stream());
 });
 
+/* Watch */
 gulp.task('watch',function() {
 	gulp.watch(['./app/**/*.js'],['es6']);
 	gulp.watch(['./app/scss/*.scss','!./scss/ie8.scss','!./scss/ie9.scss'], ['styles']);
